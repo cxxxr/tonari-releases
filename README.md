@@ -8,7 +8,7 @@
 
 - [Node.js](https://nodejs.org/) 22 以上。ペルソナが自分のプロジェクトで `node` と `npm` を使います
 - Anthropic の API キー（環境変数 `ANTHROPIC_API_KEY`）。ペルソナが考えるのに使います（下の「設定」）
-- 声を出すなら [AivisSpeech](https://aivis-project.com/)（下の「声を出す」）。動いていると、ペルソナが声で話します。無ければ字幕だけになり、パネルに入れ方の案内が出ます
+- 声を出すなら [AivisSpeech](https://aivis-project.com/)（下の「声を出す」）。パネルの案内から tonari に入れてもらえます。無ければ字幕だけになります
 
 ## 始めかた
 
@@ -22,27 +22,21 @@
 
 ## 声を出す（AivisSpeech）
 
-**Windows・macOS:** [AivisSpeech の公式サイト](https://aivis-project.com/)からアプリを入れて、起動しておきます。tonari の設定は要りません。初めて起動したときは声のモデルを落とすので、数分かかります。
+声のエンジン（AivisSpeech）が動いていないと、パネルに案内が出ます。
 
-**Linux:** アプリが無いので、音声合成エンジンを [Docker](https://docs.docker.com/engine/install/) で動かします。
+- **いちばん簡単なやり方:** 案内の「tonari に入れてもらう（約 1.8GB）」を押します。tonari が声のエンジンと既定の声を落として入れ、声で話しはじめます。どの OS でも同じで、Linux でも Docker は要りません。次からは tonari の起動と一緒に動き、終わると止まります。初めてのときは、落とすのに数分かかります
+- **自分で入れる場合（Windows・macOS）:** [AivisSpeech の公式サイト](https://aivis-project.com/)からアプリを入れて、起動しておきます。動いていれば、tonari はそちらを使います
+- **自分で入れる場合（Linux）:** 音声合成エンジンを [Docker](https://docs.docker.com/engine/install/) で動かします
 
-```bash
-mkdir -p ~/.local/share/AivisSpeech-Engine
-docker run -d --name aivisspeech --restart unless-stopped \
-  -p 127.0.0.1:10101:10101 \
-  -v ~/.local/share/AivisSpeech-Engine:/home/user/.local/share/AivisSpeech-Engine-Dev \
-  ghcr.io/aivis-project/aivisspeech-engine:cpu-latest
-```
-
-- `-v` の右側（`/home/user/...`）はコンテナの中の場所なので、そのまま書きます。左側のディレクトリの持ち主は、コンテナの中のユーザー（ふつう uid 1000）にしておきます
-- NVIDIA の GPU があるなら、`cpu-latest` を `nvidia-latest` にして `--gpus all` を足すと速くなります
-- `curl http://127.0.0.1:10101/version` で版の番号が返れば、準備できています
-- `user.yaml`（下の「設定」）に次を書いておくと、エンジンが止まっていても tonari の起動のときに立ち上げます
-
-  ```yaml
-  voice_engine:
-    start_cmd: docker start aivisspeech
+  ```bash
+  mkdir -p ~/.local/share/AivisSpeech-Engine
+  docker run -d --name aivisspeech --restart unless-stopped \
+    -p 127.0.0.1:10101:10101 \
+    -v ~/.local/share/AivisSpeech-Engine:/home/user/.local/share/AivisSpeech-Engine-Dev \
+    ghcr.io/aivis-project/aivisspeech-engine:cpu-latest
   ```
+
+  `-v` の右側（`/home/user/...`）はコンテナの中の場所なので、そのまま書きます。`user.yaml`（下の「設定」）に `voice_engine:` の `start_cmd: docker start aivisspeech` を書いておくと、tonari の起動のときに立ち上げます
 
 声が出ないときは、ペルソナ画面の声の欄で、エンジンにある声を選んでください。
 
