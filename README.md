@@ -8,7 +8,7 @@
 
 - [Node.js](https://nodejs.org/) 22 以上。ペルソナが自分のプロジェクトで `node` と `npm` を使います
 - Anthropic の API キー（環境変数 `ANTHROPIC_API_KEY`）。ペルソナが考えるのに使います（下の「設定」）
-- 声を出すなら [AivisSpeech](https://aivis-project.com/)。起動しておくと、ペルソナが声で話します。無ければ字幕だけになり、パネルに入れ方の案内が出ます
+- 声を出すなら [AivisSpeech](https://aivis-project.com/)（下の「声を出す」）。動いていると、ペルソナが声で話します。無ければ字幕だけになり、パネルに入れ方の案内が出ます
 
 ## 始めかた
 
@@ -19,6 +19,32 @@
 2. ペルソナの作業を選ぶ。自分のプロジェクトを進めてもらうか、あなたのリポジトリを「見守る」（別に回している Claude Code の作業を、ペルソナの作業として見せる）か「手伝う」（作業を一部任せる）
 3. ペルソナが隣で作業を始める。あなたも自分の作業をする
 4. 区切りで休憩。終わるときに「どこまでいった？」と聞かれる
+
+## 声を出す（AivisSpeech）
+
+**Windows・macOS:** [AivisSpeech の公式サイト](https://aivis-project.com/)からアプリを入れて、起動しておきます。tonari の設定は要りません。初めて起動したときは声のモデルを落とすので、数分かかります。
+
+**Linux:** アプリが無いので、音声合成エンジンを [Docker](https://docs.docker.com/engine/install/) で動かします。
+
+```bash
+mkdir -p ~/.local/share/AivisSpeech-Engine
+docker run -d --name aivisspeech --restart unless-stopped \
+  -p 127.0.0.1:10101:10101 \
+  -v ~/.local/share/AivisSpeech-Engine:/home/user/.local/share/AivisSpeech-Engine-Dev \
+  ghcr.io/aivis-project/aivisspeech-engine:cpu-latest
+```
+
+- `-v` の右側（`/home/user/...`）はコンテナの中の場所なので、そのまま書きます。左側のディレクトリの持ち主は、コンテナの中のユーザー（ふつう uid 1000）にしておきます
+- NVIDIA の GPU があるなら、`cpu-latest` を `nvidia-latest` にして `--gpus all` を足すと速くなります
+- `curl http://127.0.0.1:10101/version` で版の番号が返れば、準備できています
+- `user.yaml`（下の「設定」）に次を書いておくと、エンジンが止まっていても tonari の起動のときに立ち上げます
+
+  ```yaml
+  voice_engine:
+    start_cmd: docker start aivisspeech
+  ```
+
+声が出ないときは、ペルソナ画面の声の欄で、エンジンにある声を選んでください。
 
 ## 設定
 
