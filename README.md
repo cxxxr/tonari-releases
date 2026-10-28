@@ -169,3 +169,5 @@ AI を使う環境が ssh 先の開発マシンにしかなく、手元のマシ
 - 既定のアバターは VRoid Hub で配布されているモデルです（再配布・改変・商用利用可）
 - 付属のサンプルのアバターは、pixiv Inc. の VRM 1.0 のサンプルモデル（(c) 2022 pixiv Inc.、[VRM Public License 1.0](https://vrm.dev/licenses/1.0/)）です
 - 既定の声は AivisSpeech の凛音エルです。声のモデルの利用規約は、AivisHub のモデルのページで確認してください
+- ほかの同梱物と、使っているソフトウェアのライセンスは、各版の Releases に添えた `THIRD-PARTY-NOTICES.md` にあります（tonari の中にも入っています）
+- 利用条件は [LICENSE.md](LICENSE.md) です。入れるのは無料で、個人でも仕事でも使えます。独り言と会話を作る tonari のサーバーは、14 日間の無料のお試しのあと月額 800 円です。ほかの人に勧めるときは、tonari を配らずに、このページへの案内にしてください
